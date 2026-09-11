@@ -1,0 +1,29 @@
+module sipo(clk,rst,sin,pout);
+   input clk,rst,sin;
+   output reg [3:0]pout;
+	always @(posedge clk)begin
+	   if(rst) pout<=0;
+	   else pout<={sin,pout[3:1]}; 
+	  end
+endmodule 
+module top;
+   reg clk,rst,sin;
+   wire [3:0]pout;
+   sipo dut(clk,rst,sin,pout);
+   initial begin
+     clk=0;
+	 forever #5 clk=~clk;
+   end
+   initial begin
+      rst=1;
+	  #20;
+	  rst=0;
+   end
+   initial begin
+       repeat(10)begin
+	      @(negedge clk); 
+		  sin=$random;
+	   end
+	   $stop;
+   end
+endmodule 

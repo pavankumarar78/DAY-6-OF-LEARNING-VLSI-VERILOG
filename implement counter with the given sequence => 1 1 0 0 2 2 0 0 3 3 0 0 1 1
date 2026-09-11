@@ -1,0 +1,33 @@
+module counter(clk,rst,count);
+   input clk,rst;
+   output [1:0]count;
+   reg[4:0]count_int;
+   always @(posedge clk)begin
+      if(rst) count_int<=0;
+	  else begin
+	    count_int<=count_int+1;
+		if(count_int==11) count_int<=0;
+	  end
+   end
+   assign count[0]=~count_int[2]& count_int[1]; //a=count_int[3],b=count_int[2],c=count_int[1],d=count_int[0]; //~b& ~c;
+   assign count[1]=count_int[2]& count_int[1] | count_int[3] & count_int[1]; //b&~c | a&~c;
+endmodule 
+
+module top;
+    reg clk,rst;
+	wire [1:0]count;
+	counter dut(clk,rst,count); //connection by position
+	 initial begin
+	    clk=0;
+		forever #5 clk=~clk;
+	 end
+	    initial begin
+		   rst=1;
+		   #24;
+		   rst=0;
+		end
+		initial #300 $finish;
+endmodule 
+
+
+

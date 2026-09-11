@@ -1,0 +1,18 @@
+module piso(clk,rst,pin,sout,load);
+   input clk,rst,load;
+   input [3:0]pin;
+   output sout;
+      reg[3:0]shift_reg; //internal shift register
+      always@(posedge clk)begin
+	     if(rst) shift_reg<=0;
+		 else begin
+		    if(load) shift_reg<=pin;
+			//else shift_reg<=shift_reg>>1; //shifting right
+			//else shift_reg<=shift_reg<<1; //shifting left
+			else shift_reg<={1'b0,shift_reg[3:1]}; //shifting right
+			//else shift_reg<={shift_reg[2:0],1'b0}; //shifting left
+		 end
+	  end
+	  assign sout=shift_reg[0];
+	  //assign sout=shift_reg[3]; //shift left
+endmodule 

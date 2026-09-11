@@ -1,0 +1,28 @@
+module ha(a,b,s,c);
+  input a,b;
+  `ifdef BEHAV
+     output reg s,c;
+   `endif
+     output wire s,c;
+
+	 `ifdef BEHAV 
+	    always @(a,b) {c,s}=a+b;
+      `endif
+	  `ifdef DATAFLOW
+	     assign {c,s}=a+b;
+	  `elsif GATELEVEL
+	      xor g1(s,a,b);
+		  and g2(c,a,b);
+	   `endif
+endmodule 
+module top;
+   reg a,b;
+   wire s,c;
+   ha dut(a,b,s,c);
+   initial begin
+      {a,b}=$random;
+	  #1;
+	  $display("a=%b b=%b s=%b c=%b",a,b,s,c);
+   end
+endmodule 
+  

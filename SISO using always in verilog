@@ -1,0 +1,55 @@
+module siso(sin,clk,rst,sout);
+   input clk,sin,rst;
+   output reg sout;
+   reg n1,n2,n3;
+   always@(posedge clk)begin
+     if(rst) begin //rst==1 rst is applied
+	    n1<=0;
+		n2<=0;
+		n3<=0;
+		sout<=0;
+	 end
+	 else begin //rst==0
+      	n1<=sin;
+	  	n2<=n1;
+	  	n3<=n2;
+	  	sout<=n3;
+	 end
+   end
+endmodule 
+module top;
+   reg sin,clk,rst;
+   wire sout;
+   siso dut(sin,clk,rst,sout); //instansiation
+   initial begin //clock generation
+      clk=0;
+	  forever #5 clk=~clk;
+   end
+   initial begin //reset generation
+      rst=1;
+	  #25;
+	  rst=0;
+   end
+   initial begin  //input generation
+      repeat(10)begin
+	     @(negedge clk);
+		 sin=$random;
+	  end
+	  $finish;
+   end
+endmodule 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

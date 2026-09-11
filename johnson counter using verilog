@@ -1,0 +1,23 @@
+module johnson_counter(clk,rst,count);
+   input clk,rst;
+   output reg[3:0]count;
+   always @(posedge clk)begin
+      if(rst) count<=4'b0000;
+	  else count<={~count[0],count[3:1]};
+   end
+endmodule 
+module top;
+    reg clk,rst;
+	wire [3:0]count;
+	johnson_counter dut(clk,rst,count); //instantiation
+	  initial begin
+	     clk=0;
+		 forever #5 clk=~clk;
+	  end
+	  initial begin
+	     rst=1;
+		 #25;
+		 rst=0;
+	  end
+	  initial #300 $finish;
+endmodule 

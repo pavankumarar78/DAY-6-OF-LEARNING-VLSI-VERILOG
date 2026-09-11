@@ -1,0 +1,53 @@
+module dff(clk,rst,din,q);
+   input clk,rst,din;
+   output reg q;
+
+   always @(posedge clk)begin
+      if(rst) q<=0;
+	  else q<=din;
+   end
+endmodule 
+module siso(sin,clk,rst,sout);
+   input clk,sin,rst;
+   output sout;
+     dff u1(clk,rst,sin,n1);
+     dff u2(clk,rst,n1,n2);
+     dff u3(clk,rst,n2,n3);
+     dff u4(clk,rst,n3,sout);
+endmodule 
+module top;
+   reg sin,clk,rst;
+   wire sout;
+   siso dut(sin,clk,rst,sout); //instansiation
+   initial begin //clock generation
+      clk=0;
+	  forever #5 clk=~clk;
+   end
+   initial begin //reset generation
+      rst=1;
+	  #25;
+	  rst=0;
+   end
+   initial begin  //input generation
+      repeat(10)begin
+	     @(negedge clk);
+		 sin=$random;
+	  end
+	  $finish;
+   end
+endmodule 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+module siso(sin,clk,rst,sout);
+   input clk,sin,rst;
+   output sout;
+     reg[3:0]siso_reg;
+   always@(posedge clk)begin
+       siso_reg<={sin,siso_reg[3:1]}; //right shifting
+      // siso_reg<={siso_reg[2:0],sin}; //left shifting
+   end
+   assign sout=siso_reg[0]; //right shifting
+   //assign sout=siso_reg[3]; //left shifting
+endmodule 
+module top;
+   reg sin,clk,rst;
+   wire sout;
+   siso dut(sin,clk,rst,sout); //instansiation
+   initial begin //clock generation
+      clk=0;
+	  forever #5 clk=~clk;
+   end
+   initial begin //reset generation
+      rst=1;
+	  #25;
+	  rst=0;
+   end
+   initial begin  //input generation
+      repeat(10)begin
+	     @(negedge clk);
+		 sin=$random;
+	  end
+	  $finish;
+   end
+endmodule 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

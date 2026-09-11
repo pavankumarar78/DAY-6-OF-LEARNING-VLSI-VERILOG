@@ -1,0 +1,34 @@
+module top;
+  integer x,y,z;
+
+   function integer alu(input integer a,b,op);
+   begin
+      case(op)
+	     0:alu=a+b;
+		 1:alu=a-b;
+		 2:alu=a*b;
+		 3:alu=a/b;
+		 4:alu=a%b;
+		 5:alu=a**b;
+		 6:alu=a<<b;
+		 7:alu=a>>b;
+		 8:alu=a>b?a:b;
+		 9:alu=a<b?a:b;
+	  endcase
+    end
+   endfunction
+   initial begin
+       $display("a=20 b=30 multiplication of a and b=%0d",alu(20,30,2));
+       repeat(10)begin
+	      x=$urandom_range(10,100);
+	      y=$urandom_range(10,100);
+		  z=$urandom_range(0,9);
+		  $display("x=%0d y-%0d z=%0d operation is%0d",x,y,z,alu(x,y,z));
+	   end
+   end
+endmodule 
+
+
+
+
+

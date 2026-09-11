@@ -1,0 +1,43 @@
+module mux4x1(s,i,y);
+   input [1:0]s;
+   input [3:0]i;
+   `ifdef BEHAV_STYLE
+      output reg y;
+	`else
+	   output wire y;
+     `endif
+
+	 `ifdef DATAFLOW
+	     assign y=i[s];
+	 `elsif BEHAV_STYLE
+	    always @(s,i)begin
+		    y=i[s];
+		end
+	 `elsif GATE_LEVEL 
+          and g1(n1,~s[0],~s[1],i[0]);
+          and g2(n2,s[0],~s[1],i[1]);
+          and g3(n3,~s[0],s[1],i[2]);
+          and g4(n4,s[0],s[1],i[3]);
+          or g5 (y,n1,n2,n3,n4);
+      `endif
+endmodule
+module top;
+    reg [1:0]s;
+	reg[3:0]i;
+	wire y;
+    mux4x1 dut(s,i,y);
+	initial begin
+	  repeat(10)begin
+	   {s,i}=$random;
+	   #1;
+	   $display("i=%b s=%b y=%b",i,s,y);
+	  end
+	end
+endmodule 
+
+
+
+
+
+
+

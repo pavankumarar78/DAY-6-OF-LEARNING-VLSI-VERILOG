@@ -1,0 +1,41 @@
+module dff(clk,rst,din,q);
+   input clk,rst,din;
+   output reg q;
+   always @(posedge clk)begin
+     if(rst) q<=0;
+	 else q<=din;
+   end
+endmodule
+module dff_last(clk,rst,din,q);
+   input clk,rst,din;
+   output reg q;
+   always @(posedge clk)begin
+     if(rst) q<=1;
+	 else q<=din;
+   end
+endmodule
+
+module ring_counter(clk,rst,count);
+   input clk,rst;
+   output [3:0]count;
+       dff u1(clk,rst,count[0],count[3]);
+       dff u2(clk,rst,count[3],count[2]);
+       dff u3(clk,rst,count[2],count[1]);
+       dff_last u4(clk,rst,count[1],count[0]);
+endmodule 
+
+module top;
+    reg clk,rst;
+	wire [3:0]count;
+	ring_counter dut(clk,rst,count); //instantiation
+	  initial begin
+	     clk=0;
+		 forever #5 clk=~clk;
+	  end
+	  initial begin
+	     rst=1;
+		 #25;
+		 rst=0;
+	  end
+	  initial #300 $finish;
+endmodule 
